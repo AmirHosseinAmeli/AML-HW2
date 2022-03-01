@@ -1,0 +1,1076 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\newcommand{\eqn}{\[
+    \stcomp{(A \cup B)} = \stcomp{A} \cap \stcomp{B}
+\]}
+\usepackage{bbm}
+\usepackage{amsfonts}
+\usepackage{graphicx}%بسته‌ای برای اضافه کردن عکس
+\usepackage{float}
+\usepackage[colorlinks,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage {tikz}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=(\alph*) , itemsep=8pt,topsep=8pt}
+\setlist[enumerate,2]{label=\arabic*. ,itemsep=10pt,topsep=10pt}
+\setlist[enumerate,3]{label=\alph*. ,itemsep=10pt,topsep=10pt}
+\usepackage{xepersian}
+\settextfont[ExternalLocation=Niloofar/,
+ItalicFont = XB-NiloofarIt.ttf,
+BoldFont = XB-NiloofarBd.ttf,
+BoldItalicFont = XB-NiloofarBdIt.ttf
+]{XB-Niloofar.ttf}
+
+
+%\underset{x}{\operatorname{argmax}} 
+\DeclareMathOperator*{\argmin}{arg\,min}	
+ 
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=15mm,
+ }
+%دستور زیر برای تعیین فونت متن فارسی می‌باشد.
+
+%\settextfont[Scale=1]{XB Niloofar}%{Yas}
+%\setlength{\parindent}{0pt}
+
+\newcounter{probcnt}
+
+\NewDocumentCommand{\problem}{m}{
+\stepcounter{probcnt}\bigskip\medskip{\underline{\textbf{
+ 	 سوال
+   \arabic{probcnt}:
+   #1
+}}}
+\nopagebreak\par\medskip
+\vspace{1mm}
+}
+
+\newcommand{\heading}[4]{
+\parindent=0em
+
+\rightline{
+\makebox[6em][c]{
+\includegraphics[height=1.6cm]{images/logo}
+}}
+\vspace{-.5em}
+{\scriptsize\bf دانشکده‌ی مهندسی کامپیوتر}
+\hfill {\small
+مدرس: دکتر مهدیه سلیمانی \ 
+}\\[-5.3em]
+\leftline{\hfill\Large\bf 
+مفاهیم پیشرفته در یادگیری ماشین
+}\\[.8em]
+\leftline{\hfill\bf 
+نیم‌سال دوم 401-1400
+}\\[1.5em]
+\hrule height .12em
+\normalsize
+\vspace{0.2em} 
+\makebox[5cm][r]{#1}
+\hfill 
+\makebox[5cm][c]{\large #2} 
+\hfill
+\makebox[5cm][l]{\small #3 #4}
+\vspace{1mm} 
+\hrule height .1em
+}
+
+\newcommand{\hwhead}[3]{\heading{#1}{#2}{زمان تحویل:}{#3}}
+\DeclareMathOperator{\Wp}{\hat{W}^{(0)}}
+\DeclareMathOperator{\Wh}{\hat{W}}
+\DeclareMathOperator{\Lossh}{\hat{\mathcal{L}}}
+\DeclareMathOperator{\Loss}{\mathcal{L}}
+
+
+\begin{document}
+ 
+\vspace{2mm}
+
+\centerline{ به نام خدا}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ویرایش ددلاین و شماره و عنوان تمرین %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\hwhead{تمرین سری اول}{عنوان تمرین}{۲۵ اسفندماه}
+
+ \vspace{0.5cm}
+لطفا نکات زیر را رعایت کنید:
+\begin{itemize}
+\item[-]
+سوالات خود را از طریق پست مربوط به تمرین در \lr{Quera} مطرح کنید.
+\item[-]
+در هر کدام از سوالات، اگر از منابع خاصی استفاده کرده‌اید باید آن را ذکر کنید.
+\item[-] 
+ پاسخ ارسالی واضح و خوانا باشد.
+
+\item[-]
+تمام پاسخ‌های خود را در یک فایل با فرمت \lr{HW\#\_[SID]\_[Fullname].zip} روی کوئرا قرار دهید.
+\item[-]
+برای ارسال هر تمرین تا ساعت ۲۳:۵۹ روز ددلاین فرصت دارید. علاوه بر آن، در هر تمرین می توانید تا سقف هفت روز از تأخیر مجاز باقیمانده‌ی خود استفاده کنید.
+
+\item[-]
+برای کسب نمره کامل در این تمرین کافیست 160 نمره را دریافت نمایید، ما بقی نمرات امتیازی می باشند (40 نمره امتیازی).
+\end{itemize}
+
+\hrule height .1em
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% problem 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\problem{بهینه‌سازی در یادگیری چند وظیفه‌ای
+(15 نمره)
+}
+در سالیان اخیر الگوریتم‌های یادگیری عمیق و یادگیری تقویتی عمیق، توانسته‌اند پیشرفت‌های فوق العاده‌ای در زمینه حل بسیاری از مسائل پیچیده کسب نمایند.
+با این حال این روش‌ها هنوز به شدت وابسته به حجم زیاد داده هستند و در صورت کم بودن مجموعه داده آموزشی، عملکرد آن‌ها با افت جدی روی وظیفه هدف مواجه می‌شود. یکی از راهکارهای پیشنهادی برای حل این مسئله استفاده از رویکرد یادگیری چندوظیفه‌ای است و این تکنیک به این امید استفاده می‌شود که  
+یادگیری
+ساختار داخلی مشترک میان داده‌های وظایف مختلف، بتواند به بهبود عملکرد کلی مدل روی تمامی وظایف منجر شود.
+با این حال 
+وجود پیچیدگی‌هایی در روش‌های بهینه‌سازی شبکه‌های عصبی باعث شده است تا 
+این هدف آن طور که باید محقق نشود
+و بهینه‌سازی همزمان روی وظایف مختلف اثربخش نباشد
+.
+برای روشن‌تر شدن این موضوع، 
+\href{https://arxiv.org/pdf/2001.06782}{این مقاله}
+را مطالعه نموده و به پرسش‌های زیر پاسخ دهید:
+
+\begin{enumerate}
+    \item
+    سه عاملی که در صورت بروز همزمان می‌توانند باعث خراب شدن بهینه‌سازی 
+    شوند را معرفی کنید.
+    (9 نمره)
+    \item
+    الگوریتم 
+    \lr{PCGrad}
+    که برای حل این مشکل معرفی شده است را توضیح دهید.
+    (6 نمره)
+\end{enumerate}
+
+\problem{یادگیری چند وظیفه‌ای
+(35 نمره)
+}
+همانطور که در پرسش قبل توضیح داده شد، توجه به گرادیان‌ها ابزاری موثر برای انجام یادگیری چند وظیفه‌ای 
+\LTRfootnote {\lr{Multi-Task Learning}}
+می‌باشد. در این سوال قصد داریم تا یک کاربرد دیگر این رویکرد را بررسی کنیم.
+شبکه عصبی عمیقی به صورت 
+$f_\theta$
+با پارامترهای
+$\theta \in \mathbb{R}^q$
+برای حل یک مسئله
+یادگیری
+چندوظیفه‌ای
+در نظر بگیرید.
+فرض کنید این شبکه تا کنون برای حل
+$t-1$
+وظیفه 
+\LTRfootnote {\lr{Task}}
+$\{\mathcal{T}_1, \mathcal{T}_2, ..., \mathcal{T}_{t-1}\}$
+آموزش دیده است.
+حال قصد داریم تا یک وظیفه جدید 
+مانند
+$\mathcal{T}_t$
+به این شبکه آموزش دهیم بدون آن که عملکرد این مدل روی وظایف قبلی دچار مشکل شود.
+اما از سویی به دلیل محدودیت‌های منابع، قادر به نگه‌داری کل
+مجموعه دادگان وظایف قبلی نیستیم و تنها می‌توانیم به تعداد محدود 
+$m$
+داده به ازای هر وظیفه از مجموعه وظایف پیشین در یک حافظه جانبی کوچک ذخیره سازی نماییم.
+اگر داده‌های ذخیره شده در این حافظه از وظیفه
+$k$
+ام را با
+$\mathcal{M}_k$
+نمایش دهیم، در این صورت
+تابع
+هزینه تجربی مدل روی وظیفه 
+$k$
+به صورت زیر در نظر گرفته می‌شود:
+
+\begin{equation}
+    \ell (f_\theta, \mathcal{M}_k) = \frac{1}{m} \sum_{(x,y) \in \mathcal{M}_k} \ell(f_\theta(x,k),y) 
+\end{equation}
+
+در رابطه فوق،
+$x$
+تصویر ورودی شبکه و 
+$y$
+برچسب متناظر با آن را نشان می‌دهد.
+$k$
+نیز عددی طبیعی است که شماره وظیفه را به مدل اطلاع می‌دهد.
+
+بهینه‌سازی مستقیم روی 
+$\{\mathcal{M}_1, \mathcal{M}_2, ..., \mathcal{M}_{t-1}\} \cup \mathcal{T}_t$
+می‌تواند باعث بیش‌برازش
+\LTRfootnote {\lr{Overfitting}}
+به داده‌های وظیفه
+$t$
+یا 
+داده‌های اندک داخل حافظه بشود. لذا به دنبال روشی هستیم که 
+بدون بروز این مشکل بتواند وظیفه جدید را یاد بگیرد.
+روش پیشنهادی به این صورت است:
+داده
+$(x,y)$
+از وظیفه شماره 
+$t$
+را در نظر بگیرید.
+برای ما ایده‌آل است تا مسئله بهینه‌سازی زیر را حل نماییم:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\min_{\theta'}        &\qquad& \ell (f_{\theta'}(x,t),y)\\
+&\text{s.t.} &      & \ell (f_{\theta'}, \mathcal{M}_k) \leq  \ell (f_{\theta}, \mathcal{M}_k) \text{\lr{, for all }} k < t \label{eq:constraint}
+\end{alignat}
+\end{subequations}
+
+وجود شرط‌های بهینه‌سازی در رابطه فوق باعث می‌شود تا عملکرد مدل روی وظایف قبلی حفظ شود. حال
+برای آن که مسئله بهینه‌سازی فوق حل شود، می‌توانیم فرض کنیم که تابع هزینه
+$\ell$
+به صورت محلی تقریب خطی قابل قبولی دارد.
+لذا اگر به گرادیان توابع هزینه به صورت محلی نگاه کنیم و جهت این گرادیان را به ازای همه 
+$k$
+ها کنترل نماییم، می‌توانیم کم شدن تابع هزینه را تضمین نماییم.
+با استفاده از این رویکرد، کافیست تا گرادیانی که برای آپدیت 
+$f_{\theta'}(x,t),y)$
+استفاده می‌شود، با گرادیان تابع هزینه سایر وظایف هم راستا باشد یا اگر احیاناً هم راستا نیست، در جهت آن گرادیان‎ها تصویر شود.
+لذا شرط
+\ref{eq:constraint}
+را می‌توانیم با شرط زیر جایگزین کنیم:
+
+\begin{equation}
+    \langle g \; , \; g_k \rangle 
+    := 
+    \langle
+    \frac{\partial \ell(f_\theta(x,t),y)}{\partial \theta} 
+    \; , \; 
+    \frac{\partial \ell(f_\theta,\mathcal{M}_k)}{\partial \theta}
+    \rangle \geq 0, \text{\lr{, for all }} k < t
+\end{equation}
+
+لذا بهینه‌سازی نهایی را می‌توانیم به شکل زیر بنویسیم:
+
+\begin{subequations} \label{eq:optim}
+\begin{alignat}{2}
+&\!\min_{g'}        &\qquad& \left\lVert g'-g\right\rVert_2^2 \\
+&\text{s.t.} &      & \langle g' \; , \; g_k \rangle \geq 0 \text{\lr{, for all }} k < t 
+\end{alignat}
+\end{subequations}
+
+با در نظر گرفتن توضیحات فوق به پرسش‌های زیر پاسخ دهید:
+\begin{enumerate}
+
+\item
+مسئله
+بهنیه‌سازی 
+\ref{eq:optim}
+را به صورت یک برنامه‌ریزی مرتبه دو 
+\LTRfootnote {\lr{Quadratic Programming}}
+(QP)
+بازنویسی
+نمایید.
+(15 نمره)
+\item 
+دوگان معادل این مسئله را بازنویسی نمایید.
+فرم دوگان را تا جای ممکن ساده نمایید به طوری که بهینه‌سازی آن تنها روی یک متغیر انجام شود.
+نحوه به دست آوردن جواب بهینه‌سازی اولیه از روی جواب مسئله دوگان توضیح دهید.
+(15 نمره)
+\item
+از میان دو فرم اصلی و دوگان ساده شده، کدام یک حل عملیاتی ساده‌تری دارد؟ چرا؟
+(10 نمره)
+\end{enumerate}
+
+
+به طور کلی تمامی گام‌های پاسخ خود را به صورت دقیق توضیح دهید و جزئیات تمام مراحل را با ذکر منابع استفاده شده، مشخص نمایید.
+به عنوان راهنمایی می‌توانید برای مطالعه مسائل QP و
+فرم دوگان آن‌ها به
+\href{https://www.ams.org/qam/1960-18-02/S0033-569X-1960-0112751-2/S0033-569X-1960-0112751-2.pdf}{این مقاله}
+\lr{(Dorn 1960)}
+مراجعه کنید. (به طور خاص مطالعه صفحه 2 این مقاله و همچنین توجه به 
+\lr{Type II}
+معرفی شده در صفحه 6 می‌تواند موثر باشد)
+\iffalse
+\textbf{پاسخ:}
+
+فرمی از مسئله QP 
+که برای ما مناسب است در مقاله ذکر شده به عنوان 
+\lr {type II}
+معرفی شده است:
+
+\begin{subequations}\label{eq:QP}
+\begin{alignat}{2}
+&\!\min_{x}        &\qquad& \frac{1}{2} x^TCx + p^Tx\\
+&\text{s.t.} &      & Ax \geq b 
+\end{alignat}
+\end{subequations}
+
+که فرم دوگان آن به صورت زیر خواهد بود:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\min_{u,v}        &\qquad& \frac{1}{2} u^TCu - b^Tv\\
+&\text{s.t.} &      & A^Tv - Cu = p \label{eq:st}\\
+&&      & v \geq 0
+\end{alignat}
+\end{subequations}
+
+اگر 
+$x_0$
+جواب مسئله اول و 
+$(u_0,v_0)$
+جواب مسئله دوم باشند، 
+در این صورت با ارجاع به قسمت 6 مقاله معرفی شده، می‌توان دریافت که رابطه
+$Cu_0 = Cx_0$
+برقرار است.
+همچنین با توجه به شرط
+\ref{eq:st}،
+در نقطه بهینه رابطه
+$Cx_0 = Cu_0 = A^Tv_0-p$
+نیز صادق است.
+
+حال با در نظر گرفتن رابطه
+\ref{eq:optim}
+،
+می‌توانیم فرم QP
+آن را به صورت زیر بنویسیم:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\min_{x}        &\qquad&  xx^T-2g^Tx+gg^T\\
+&\text{s.t.} &      & \langle x \; , \; g_k \rangle \geq 0 \text{\lr{, for all }} k < t 
+\end{alignat}
+\end{subequations}
+
+جمله 
+$gg^T$
+در بهینه‌سازی تاثیری ندارد. همچنین با تعریف
+$G:=-(g_1,...,g_{t-1})$
+فرم نهایی QP به صورت زیر خواهد بود:
+
+\begin{subequations} \label{eq:QP_}
+\begin{alignat}{2}
+&\!\min_{x}        &\qquad&  \frac{1}{2} xx^T-g^Tx\\
+&\text{s.t.} &      & Gx \geq 0
+\end{alignat}
+\end{subequations}
+
+از مقایسه 
+\ref{eq:QP_}
+و
+\ref{eq:QP}
+داریم:
+$C=I, p = -g, A = G, b=0$.
+
+بنابراین فرم دوگان به صورت زیر خواهد بود:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\min_{u,v}        &\qquad& \frac{1}{2} u^Tu\\
+&\text{s.t.} &      & G^Tv - u = -g \\
+&&      & v \geq 0
+\end{alignat}
+\end{subequations}
+
+حال با در نظر گرفتن رابطه 
+$Cx_0 = Cu_0 = A^Tv_0-p$
+در نقطه بهینه
+،
+می‌توان نوشت:
+$x=u=G^Tv+g$
+
+لذا با جایگذاری داریم:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\min_{v}        &\qquad& \frac{1}{2} (G^Tv+g)^T(G^Tv+g)\\
+&\text{s.t.} &      & v \geq 0
+\end{alignat}
+\end{subequations}
+
+بنابراین فرم نهایی ساده شده به صورت زیر خواهد بود:
+
+\begin{subequations}\label{eq:dualQP}
+\begin{alignat}{2}
+&\!\min_{v}        &\qquad& \frac{1}{2} v^TGG^Tv+g^TG^Tv\\
+&\text{s.t.} &      & v \geq 0
+\end{alignat}
+\end{subequations}
+
+از جواب مسئله 
+\ref{eq:dualQP}
+می‌توان با جایگذاری
+$x = G^Tv+g$
+به جواب مسئله 
+\ref{eq:QP_}
+رسید.
+
+برای مقایسه
+دو مسئله
+\ref{eq:QP_}
+و
+\ref{eq:dualQP}
+لازم است تا به ابعاد مسئله بهینه‌سازی توجه کنیم.
+بهینه‌سازی اول روی متغیر 
+x
+انجام می‌شود که هم بعد با تعداد پارامترهای شبکه است و می‌تواند تا میلیون‌ها پارامتر را در بر بگیرد.
+به عبارت دیگر، با یادآوری 
+$\theta \in \mathbb{R}^q$
+،
+می‌دانیم:
+$x \in \mathbb{R}^q, G \in \mathbb{R}^{t\times q}, v \in \mathbb{R}^t$
+
+لذا مشاهده می‌شود که با حل مسئله
+\ref{eq:dualQP}
+به جای 
+\ref{eq:QP_}
+با یک بهینه‌سازی با تعداد پارامتر‌های مساوی با تعداد وظایف روبه‌رو هستیم به جای آن که مسئله‌ای با تعداد پارامترهای شبکه را حل نماییم.
+
+\fi
+
+\problem{انتقال یادگیری
+(40 نمره)
+}
+انتقال یادگیری
+\LTRfootnote{Transfer Learning}
+یکی از الگوهای پرطرفدار در زمینه آموزش شبکه‌های عصبی است. برای این منظور ابتدا شبکه عصبی را روی یک دیتاست حجیم آموزش می‌دهند و سپس 
+آن را روی داده‌های وظیفه هدف به‌سازی 
+\LTRfootnote{Fine-Tune}
+می‌کنند.
+از سویی
+بهینه‌سازی بدون قید و شرط به داده‌های وظیفه هدف، به خصوص زمانی که تعداد داده‌های مقصد محدود است، می‌تواند در بعضی شرایط باعث
+از دست رفتن عمومیت بخشی 
+\LTRfootnote{Generalization}
+مدل شده و اتفاقاً دقت مدل را پایین آورد.
+برای حل این مشکل، بهینه‌سازی وظیفه هدف را به صورت 
+مقید در آورده یا از جملات منظم سازی در آن استفاده می‌کنند.
+
+فرض کنید شبکه عصبی 
+$f_W$
+با
+$L$
+لایه و 
+با پارامترهای 
+$W$
+را در اختیار داریم. 
+ورن‌های این شبکه پیش‌آموزش دیده‌اند و از این طریق نقطه شروع 
+$\hat{W}_i^{(0)}$
+به دست آمده است.
+همچنین 
+$\mathcal{L}(f_W) = \mathbb{E}_{(x,y)}[\ell(f_W(x),y)]$
+رابه عنوان تابع هزینه وظیفه مقصد در نظر بگیرید
+و فرض کنید 
+$\ell$
+تابعی 
+محدب،
+\lr{1-Lipschitz}
+و از بالا کراندار با کران 
+$C_2$
+است
+.
+برای جلوگیری از فاصله گرفتن وزن‌های مدل از نقطه شروع پیش‌آموزش،
+ به‌سازی مقید زیر را پیشنهاد می‌کنیم:
+
+\begin{subequations}
+\begin{alignat}{2}
+&\!\hat{W} = \argmin_{W}       &\qquad&  \mathcal{\hat{L}}(f_W)\\
+&\text{s.t.} &      & {\left\lVert W_i - \hat{W}_i^{(0)}\right\rVert}_2 \leq D_i, \forall  i = 1,...,L
+\end{alignat}
+\end{subequations}
+
+که منظور از 
+$W_i \in \mathbb{R}^{d_{i-1} \times d_i}$
+ماتریس وزن‌ها در لایه 
+$i$
+ام می‌باشد
+(
+بدیهی است که ابعاد ورودی برابر 
+$d_0$
+خواهد بود).
+همچنین 
+$\hat{\mathcal{L}}$
+تابع هزینه تجربی وظیفه مقصد را روی 
+$n$
+داده
+نشان می‌دهد و 
+$D_i$
+ها هایپرپارامترهایی هستند که میزان مقید بودن به نقطه شروع اولیه را نشان می‌دهند.
+
+در ادامه این سوال به دنبال محاسبه کرانی برای خطای عمومیت بخشی 
+$\hat{W}$
+هستیم و برای این منظور 
+به خطای 
+$\mathcal{L}(f_{\hat{W}}) - \hat{\mathcal{L}}(f_{\hat{W}})$
+توجه کرده و از ابزارهای 
+PAC-Bayes
+برای آن استفاده می‌کنیم.
+
+با فرض محدود بودن وزن‌های اولیه
+(
+$
+\left\lVert \hat{W}_i^{(0)} \right\rVert_2 \leq B_i , B_i > 1, \forall i = 1,...,L
+$
+) و 
+با فرض 
+محدود بودن ورودی
+(
+$
+\left\lVert x \right\rVert_2 \leq C_1 , C_1 \geq 1
+$
+) و 
+با در نظر گرفتن 
+$H$
+به عنوان عرض شبکه 
+(
+$H =\max d_i$
+)
+کران زیر با احتمال
+$1 - 2\delta$
+برقرار خواهد بود:
+
+
+
+\begin{equation} \label{eq:bound}
+    \mathcal{L}(f_{\hat{W}}) \leq \hat{\mathcal{L}}(f_{\hat{W}}) + \epsilon + C_2\sqrt{\frac{\frac{36}{\epsilon^2}C_1^{2}H\log{(4LHC_2)}(\Sigma^{L}_{i = 1}\frac{\prod^{L}_{j = 1}(B_j + D_j)}{B_i + D_i})^2(\Sigma^{L}_{i = 1}D_i^2) + 3\ln \frac{n}{\delta} + 8}{n}}
+\end{equation}
+
+
+که منظور از 
+$\epsilon$
+یک عدد کوچک  مثبت و دلخواه می باشد.
+
+در این تمرین قصد داریم رابطه
+\ref{eq:bound}
+را ثابت نماییم.
+لذا گام به گام به صورت زیر عمل می‌کنیم:
+
+\begin{enumerate}
+\item
+با توجه به قضایای مطرح شده در 
+\href{https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.6957&rep=rep1&type=pdf}{این مقاله}
+می‌دانیم که اگر
+$\mathrm{H}$
+یک فضای فرضیه باشد، توزیع 
+$P$
+یک توزیع پیشین مستقل از داده‌های آموزش روی این فضا باشد و 
+$Q$
+توزیع پسین وابسته به داده‌های آموزشی باشد، در این صورت با احتمال 
+$1-\delta$
+باند زیر معتبر است
+:
+
+\begin{equation} \label{eq:mc}
+    \mathbb{E}_{h\sim Q}[\mathcal{L}(h)] \leq
+    \mathbb{E}_{h\sim Q}[\hat{\mathcal{L}}(h)] + C_2 \sqrt{
+    \frac{KL(Q|P) + 3 \ln {n/\delta} + 8}{n}
+    }
+\end{equation}
+
+با در نظر گرفتن 
+$P$
+به صورت یک توزیع گاوسی حول
+$\hat{W}^{(0)}$
+و
+$Q$
+به صورت یک توزیع گاوسی 
+با میانگین 
+$\hat{W}$
+و واریانس‌های 
+$\sigma^2 I$
+که 
+$\sigma^2$
+یک ثابت قابل کنترل است، 
+جمله 
+$KL$
+را محاسبه کرده و وجود باند بالای
+$\frac{\sum_{L}^{i=1}D_i^2}{2\sigma^2}$
+را برای آن ثابت کنید.
+(10 نمره)
+\item
+متغیر
+$e$
+را به صورت 
+$e = \sigma \sqrt{2H \log (4L.HC_2)}$
+در نظر بگیرید.
+همچنین ماتریس
+$U$
+را یک ماتریس تصادفی فرض کنید که هر درایه آن به صورت
+\lr{i.i.d.}
+از توزیع گاوسی با میانگین صفر و واریانس 
+$\sigma^2$
+گرفته شده است.
+در این صورت فرض کنید رابطه زیر با احتمال 
+$1-\delta$
+برقرار است:
+
+\begin{equation}\label{eq:1delta}
+    \left\lVert f_{W+U}(x) - f_W(x) \right\rVert_2 \leq  e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert W_j \right\rVert_2+e}
+    {\left\lVert W_i \right\rVert_2+e}
+    )
+\end{equation}
+
+از این رابطه استفاده کرده و به شرطی که 
+$\delta$
+به اندازه کافی کوچک باشد نشان دهید:
+(10 نمره)
+
+\begin{equation}\label{eq:ub}
+    \mathbb{E}_{h\sim Q}[\hat{\mathcal{L}}(h)] \leq \hat{\mathcal{L}}(f_{\hat{w}}) + 
+    2e C_1 (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert W_j \right\rVert_2+e}
+    {\left\lVert W_i \right\rVert_2+e}
+    )
+\end{equation}
+
+\item
+به طریق مشابه قسمت قبل، می‌توان باند پایین مناسبی برای
+$\mathbb{E}_{h\sim Q}[\mathcal{L}(h)]$
+به صورت زیر به دست آورد:
+
+\begin{equation}\label{eq:lb}
+    \mathbb{E}_{h\sim Q}[\mathcal{L}(h)] \geq \Loss (f_{\hat{w}}) -
+    2e C_1 (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert W_j \right\rVert_2+e}
+    {\left\lVert W_i \right\rVert_2+e}
+    )
+\end{equation}
+
+حال از این موضوع و از پاسخ خود به قسمت‌های قبلی استفاده کرده و رابطه زیر را نشان دهید:
+(10 نمره)
+\begin{equation}
+    \mathcal{L}(f_{\hat{W}}) \leq \hat{\mathcal{L}}(f_{\hat{W}}) + 4e C_1  (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L} B_j + D_j +e}
+    {B_i + D_i + e}
+    ) + C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}}
+\end{equation}
+
+\item
+با در نظر گرفتن
+$\sigma = \frac
+{\epsilon}
+{6C_1 \alpha \sqrt{2H \log (4L.HC_2)}}$
+که
+$\alpha = (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L} B_j + D_j}
+    {B_i + D_i}
+    )
+$
+اثبات را تمام کنید.
+(15 نمره)
+
+\end{enumerate}
+
+\iffalse
+\textbf{پاسخ:}
+
+
+\begin{enumerate}
+    \item 
+   \begin{align*}
+    KL(Q|P) = \mathbb{E}_{W\sim P}[\log
+    \frac
+    {Pr(W\sim P)}
+    {Pr(W\sim Q)}]
+    = \mathbb{E}_{W\sim P}[\log
+    \frac
+    {exp (-\frac{1}{2\sigma^2} \left\lVert W - \hat{W}^{(0)} \right\rVert^2)}
+    {
+    exp (-\frac{1}{2\sigma^2} \left\lVert W - \hat{W}\right\rVert^2)}
+    ] \\ 
+    = 
+    -\frac{1}{2\sigma^2} \mathbb{E}_{W\sim P}
+    [
+    \left\lVert W - \hat{W}^{(0)} \right\rVert^2
+    - \left\lVert W - \hat{W} \right\rVert^2
+    ]
+    =
+    \mathbb{E}_{W\sim P}
+    [
+    (W - \Wp)(W - \Wp)^T- (W - \Wh)(W - \Wh)^T 
+    ]
+    \\ =
+    -\frac{1}{2\sigma^2} \mathbb{E}_{W\sim P}
+    [
+    WW^T - W\Wp^T - \Wp W^T + \Wp\Wp^T - WW^T + W\Wh^T + \Wh W^T - \Wh\Wh^T
+    ]\\
+    =-\frac{1}{2\sigma^2}[ -\mathbb{E}[W]\Wp^T - \Wp \mathbb{E}[W^T] + \Wp\Wp^T + \mathbb{E}[W]\Wh^T + \Wh \mathbb{E}[W^T] - \Wh\Wh^T]
+    \\
+    = -\frac{1}{2\sigma^2} [-\Wp\Wp^T - \Wp \Wp^T + \Wp\Wp^T + \Wp\Wh^T + \Wh \Wp^T - \Wh\Wh^T] \\ 
+    = \frac{1}{2\sigma^2} \left\lVert W - \Wp \right\rVert_2^2
+    \leq \frac{\sum_{i=1}^{L}D_i^2}{2\sigma^2}
+\end{align*} 
+
+
+\item
+با توجه به 
+\lr{1-Lipschitz}
+بودن تابع 
+$\ell$
+داریم:
+   \begin{align*}
+     |\ell(f_{\Wh+U}(x),y) - \ell(f_{\Wh}(x),y)| \leq  \left\lVert f_{\Wh+U}(x) - f_{\Wh}(x) \right\rVert_2 \leq e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    )\\
+    \Rightarrow 
+    \ell(f_{\Wh+U}(x),y) \leq \ell(f_{\Wh}(x),y) + e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    )\\
+    \Rightarrow 
+    \Lossh(f_{\Wh + U}) \leq \Lossh(f_{\Wh}) + e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    )
+\end{align*} 
+
+باتوجه به این که رابطه 
+\ref{eq:1delta}
+با احتمال 
+$1-\delta$
+و همچنین با توجه به این که تابع هزینه از بالا با 
+$C_2$
+محدود شده است، 
+با امید گرفتن از 
+$\Lossh$
+و شرطی کردن آن داریم:
+
+   \begin{align*}
+    \Rightarrow 
+    \mathbb{E}_U[\Lossh(f_{\Wh + U})] \leq
+    (1-\delta) \times \mathbb{E}[
+    \Lossh(f_{\Wh}) + e C_1
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}]
+    ) + \delta \times C_2 \\
+    \Rightarrow 
+    \mathbb{E}_{h\sim Q}[\Lossh(f_h)] \leq
+    \Lossh(f_{\Wh}) + 
+    \underbrace{
+    (1-\delta) e C_1
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    )}_{A_1} + \underbrace{\delta \times C_2}_{A_2}
+\end{align*} 
+
+با توجه به این که 
+$A_1$
+برحسب 
+$\delta$
+نزولی بوده و 
+$A_2$
+صعودی است،
+اگر 
+$\delta$
+به اندازه کافی کوچک اختیار شود به نحوی که 
+$A_2 \leq A_1$،
+در این صورت
+می‌توان نوشت:
+
+   \begin{align*}
+    \Rightarrow 
+    \mathbb{E}_{h\sim Q}[\Lossh(f_h)] \leq
+    \Lossh(f_{\Wh}) + 
+    2(1-\delta) e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    ) \\
+    \leq
+    \Lossh(f_{\Wh}) + 
+    2e C_1 
+    (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert {\Wh}_j \right\rVert_2+e}
+    {\left\lVert {\Wh}_i \right\rVert_2+e}
+    )
+\end{align*} 
+
+\item
+با ترکیب روابط 
+\ref{eq:lb}
+،
+\ref{eq:ub}
+و
+\ref{eq:mc}
+رابطه زیر با احتمال لااقل 
+$1-2\delta$
+درست است:
+
+
+\begin{subequations}
+\begin{alignat}{2}
+    \Loss(f_{\hat{w}}) \leq \Lossh(f_{\hat{w}}) + 
+    4e C_1 (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L}\left\lVert W_j \right\rVert_2+e}
+    {\left\lVert W_i \right\rVert_2+e}
+    ) +  C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}}\\
+    \Rightarrow
+    \Loss(f_{\hat{w}}) \leq \Lossh(f_{\hat{w}}) + 
+    4e C_1 (\sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L}\left\lVert W_j \right\rVert_2+e
+    ) +  C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}}
+\end{alignat}
+\end{subequations}
+
+از طرفی طبق فرض سوال:
+
+\begin{subequations}
+\begin{alignat}{2}
+    \left\lVert {\Wp}_i \right\rVert_2 \leq B_i , \left\lVert {\Wh}_i - {\Wp}_i \right\rVert_2 \leq D_i 
+    \Rightarrow
+    \left\lVert {\Wh}_i \right\rVert_2 \leq B_i + D_i \\
+    \Rightarrow
+    \Loss(f_{\hat{w}}) \leq \Lossh(f_{\hat{w}}) + 
+    4e C_1 (\sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j + e
+    )  +  C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}}\\ \label{eq:final}
+    \Rightarrow
+    \Loss(f_{\hat{w}}) \leq \Lossh(f_{\hat{w}}) + 
+    4e C_1 (\sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L} B_j + D_j + e}
+    {B_i + D_i + e}
+    )  +  C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}}
+\end{alignat}
+\end{subequations}
+
+\item
+با توجه به نحوه تعریف 
+$\alpha$
+و با توجه به 
+$C_1 \geq 1$
+و همچنین کوچک بودن 
+$\epsilon$
+می‌توان نتیجه گرفت که:
+
+\begin{subequations}
+\begin{alignat}{2}
+    \alpha e = \alpha \sigma \sqrt{2H \log (4L.HC_2)} = \alpha 
+    \frac{\epsilon}{6C_1 \alpha \sqrt{2H \log (4L.HC_2)}}
+    \sqrt{2H \log (4L.HC_2)} = \frac{\epsilon}{6C_1} \leq \frac{1}{6}\\
+    \Rightarrow e \leq \frac{1}{6\alpha}
+\end{alignat}
+\end{subequations}
+
+با توجه به این که 
+$B_k \geq 1$ 
+و
+$D_k \geq 0$
+پس 
+$\alpha \geq L$
+و در نتیجه به ازای هر 
+$1\leq k \leq L$
+داریم
+:
+
+\begin{subequations}
+\begin{alignat}{2}
+e \leq \frac{1}{6\alpha} \leq \frac{1}{6L} \leq \frac{B_k + D_k}{6L} \\
+\Rightarrow \sum_{i=1}^L
+    \frac
+    {\prod_{j=1}^{L} B_j + D_j + e}
+    {B_i + D_i + e}
+     = \sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j + e \leq \sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j + \frac{B_j+D_j}{6L} \\ = (1+\frac{1}{6L})^{(L-1)} \sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j \leq  (1+\frac{1}{6L})^{L} \sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j \leq
+    exp(\frac{1}{6}) \sum_{i=1}^L
+    \prod_{j=1, j\neq i}^{L} B_j + D_j \leq \frac{3}{2} \alpha
+\end{alignat}
+\end{subequations}
+
+با جایگذاری نهایی در رابطه 
+\ref{eq:final}
+و با توجه به این که
+$\sigma^2 = \frac
+{\epsilon^2}
+{36C^2_1 \alpha^2 \times (2H \log (4L.HC_2))}$
+داریم:
+
+\begin{subequations}
+\begin{alignat}{2}
+    \Rightarrow
+    \Loss(f_{\hat{w}}) \leq \Lossh(f_{\hat{w}}) + 
+    4e C_1 \times (\frac{3}{2} \alpha)  +  C_2 \sqrt{\frac
+    {\sum_{i=1}^L \frac{D_i^2}{2\sigma^2} + 3 \ln {\frac{n}{\delta}} + 8}
+    {n}} \\ = \hat{\mathcal{L}}(f_{\hat{W}}) + \epsilon + C_2\sqrt{\frac{\frac{36}{\epsilon^2}C_1^{2}H\log{(4LHC_2)}(\Sigma^{L}_{i = 1}\frac{\prod^{L}_{j = 1}(B_j + D_j)}{B_i + D_i})^2(\Sigma^{L}_{i = 1}D_i^2) + 3\ln \frac{n}{\delta} + 8}{n}}
+\end{alignat}
+\end{subequations}
+
+\end{enumerate}
+\fi
+\iffalse
+\problem{روش‌های جعبه‌سیاه متا-یادگیری}
+روش‌های 
+\LTRfootnote{Black-Box}{جعبه‌سیاه}
+به
+عنوان
+یکی از سه روش متداول در 
+\LTRfootnote{Meta-Learning}{متا-یادگیری}
+شناخته
+می‌شوند. در این روش‌ها 
+\LTRfootnote{Meta-Learner}{متا-یادگیر}
+یک شبکه عصبی است که پارامترهای 
+\LTRfootnote{Base-Learner}{یادگیر پایه}
+را تولید می‌کند.
+مقاله
+\href{https://arxiv.org/pdf/1807.01613}{\lr{Garnelo 2018}}
+را مطالعه کنید و ضمن معرفی ساختار معرفی شده برای یادگیر-پایه و متا-یادگیر، توضیح دهید که در چه مواقعی احتمالاً این ساختار نسبت به ساختار LSTM
+معرفی شده در مقاله
+\href{https://proceedings.mlr.press/v48/santoro16.pdf}{\lr{Santoro 2016}}
+برتری دارد؟
+(10 نمره)
+
+\fi
+
+\problem{ (عملی) انتقال یادگیری (۲۰ نمره)}
+هدف از این سوال دستگرمی برای یادآوری یادگیری عمیق و تجربه انتقال یادگیری است.
+\begin{enumerate}
+\item
+در این بخش شما بایستی یک دسته‌بند را روی دادگان
+\lr{Cifar10}
+آموزش دهید.
+بدین جهت در فایل‌های پیوست ماژولی تحت عنوان 
+\lr{ProtoNetBack}
+قرار داده شده است. از این ماژول کانولوشنی در معماری شبکه خود به عنوان 
+\lr{Backbone}
+استفاده کنید. بدین صورت که روی خروجی این ماژول دو لایه نهان 
+\lr{feed-forward}
+با اندازه دلخواه قرار دهید و سپس لایه دسته‌بند را روی آنها سوار کنید.
+در آموزش شبکه خود سعی کنید تا از تکنیک‌های افزون‌سازی و همچنین بهینه‌ساز مناسب استفاده کنید تا دقت شبکه‌تان بهتر باشد. انتظار می‌رود دقت شبکه‌ آموزش داده شده بر روی دادگان تست 
+\lr{Cifar10}
+حداقل به میزان هفتاد درصد باشد.
+
+\item
+در فایل‌های پیوستی دادگانی تحت عنوان 
+\lr{Tiny Image}
+در دو مجموعه آموزش و تست قرار داده شده اند. در این سوال شما بایستی با استفاده از معماری سوال قبل و تحت سه سناریو زیر یک دسته‌بند را برای این دادگان آموزش دهید:
+
+\begin{enumerate}
+\item
+مساله دسته‌بندی تصاویر 
+\lr{Tiny Image}
+را از ابتدا روی معماری مشابه سوال قبل آموزش دهید. در واقع در این سناریو از وزن‌های به دست آمده در سوال قبلی نباید هیچ استفاده ای کنید.
+
+\item
+شبکه پیش آموزش دیده شده بر روی 
+\lr{Cifar10}
+را در نظر بگیرید. برای آموزش مساله دسته‌بندی تصاویر
+\lr{Tiny Image}
+در این سناریو، وزن‌های قسمت
+\lr{Backbone}
+را ثابت در نظر بگیرید (فریز کنید) و صرفا به 
+\lr{Fine-Tune}
+ وزن‌های لایه‌های
+\lr{Feed-Forward}
+بپردازید.
+
+\item
+شبکه پیش آموزش دیده شده بر روی 
+\lr{Cifar10}
+را در نظر بگیرید. برای آموزش مساله دسته‌بندی تصاویر
+\lr{Tiny Image}
+در این سناریو، تمامی وزن‌های شبکه را مورد
+\lr{Fine-Tune}
+  قرار بدهید.
+
+\end{enumerate}
+برای هر سه سناریو بالا نمودار تابع
+\lr{Loss}
+و میزان دقت مدل در حین آموزش را نیز رسم کنید. نتایج و نمودار‌های حاصل از هر سه سناریو را با یکدیگر مقایسه کرده و در مورد آن‌ها بحث کنید.
+
+\end{enumerate}
+
+
+\problem{(عملی) یادگیری چندوظیفه‌ای (۴۰ نمره)}
+
+در فایل‌های پیوستی زیرمجموعه‌ای از دادگان
+\lr{Omniglot}
+آورده شده است. این دادگان شامل ۲۰ تصویر از رسم الخط‌ هر یک از کاراکتر‌های مربوط به سی الفبای متفاوت نظیر لاتین، سانسکریت و ... است.
+در این شروع ابتدا این مجموعه را به دو دسته آموزش و تست تقسیم کنید.  برای این منظور تعداد ۶ عدد از رسم الخط های هر کاراکتر را به عنوان داده تست و ۱۴ عدد باقی مانده را به عنوان داده آموزش جداسازی کنید. در ضمن هر یک از تصاویر دادگان را به سایز ۳۲ در ۳۲ تغییر اندازه دهید.
+در هر یک از موارد خواسته شده زیر نتایج و دقت روی هر یک از الفبای مختلف را به همراه مجموع تعداد پارامتر‌های شبکه گزارش کنید. 
+\begin{enumerate}
+\item
+در این بخش برای مساله دسته بندی کاراکترها برای هر الفبا یک شبکه دسته بند را به صورت جداگانه آموزش دهید (به بیان بهتر در این بخش شما بایستی سی شبکه عصبی آموزش دهید).
+طراحی معماری شبکه شما مشابه سوال قبل است. در این جا نیز از 
+\lr{ProtoNetBack}
+به عنوان
+\lr{Backbone}
+استفاده کنید و دو لایه نهان
+\lr{Feed-Forward}
+با اندازه دلخواه نیز بر روی خروجی آن اضافه کنید و سپس یک لایه دسته‌بند به اندازه تعداد کاراکترهای الفبای منظور در انتهای شبکه قرار دهید.
+\item
+در این بخش قصد داریم تا با استفاده از یادگیری چندوظیفه‌ای به حل مساله بپردازیم.
+به این منظور از معماری 
+\lr{Multi-Head}
+استفاده کنید. 
+این معماری را در دو سناریو زیر مورد آزمایش قرار بدهید:
+\begin{enumerate}
+\item
+قسمت
+\lr{Backbone}
+و دو لایه نهان بین تمامی وظیفه‌ها مشترک هستند و تنها لایه آخر (لایه دسته بند) مختص به هر وظیفه است.
+\item
+قسمت
+\lr{Backbone}
+و لایه نهان اول بین تمامی وظیفه‌ها مشترک هستند و لایه نهان دوم و لایه دسته‌بند مختص به هر وظیفه هستند.
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+\problem{(عملی) متایادگیرنده مبتنی بر مدل (۴۰ نمره)}
+در این سوال قصد داریم مدل متایادگیرنده معرفی شده در مقاله
+\href{https://arxiv.org/abs/1707.03141}{\lr{Mishra 2017}}
+را که یک مدل متایادگیرنده مبتنی بر مدل می‌باشد را به صورت گام به گام پیاده‌سازی نماییم.
+\\
+مدل این مقاله از دو ماژول اصلی Convolution Temporal و Attention تشکیل شده است که هدف ماژول Convolution Temporal جمع‌آوری اطلاعات لازم برای پیش‌بینی مدل از تمام داده‌های Support و هدف ماژول Attention بدست آوردن و توجه به بخش‌های اطلاعات‌دار داده می‌باشد.\\
+به صورت کلی مواردی که باید در Notebook داده شده تکمیل کنید به شرح زیر است:
+
+\begin{enumerate}
+	
+	\item
+	آماده‌سازی دادگان خود باتوجه به پارامترهای متایادگیری و نحوه استفاده آن در مدل
+	\item
+	پیاده‌سازی شبکه‌های مدل براساس توضیحات داده شده و تکمیلی‌تر موجود در مقاله
+	\item
+	آموزش مدل در فاز meta-training و تست آن در فاز meta-testing
+	
+\end{enumerate}
+	
+در Notebook داده شده تمام مراحل و کار‌هایی که باید انجام دهید با دقت تشریح شده است. دادگانی که در این سوال استفاده می‌کنید دادگان Omniglot می باشد که از دادگان رایج در مسئله متایادگیری می باشد.
+در Notebook داده شده روند آموزش مدل باتوجه به خطای تابع هزینه و دقت روی دادگان ارزیابی گزارش شود. حداقل دقت برای این سوال 93 می باشد.
+
+\end{document}
