@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (MiKTeX 20.6.29) (preloaded format=xelatex 2020.11.22)  2 MAR 2022 07:19
+This is XeTeX, Version 3.14159265-2.6-0.999992 (MiKTeX 20.6.29) (preloaded format=xelatex 2020.11.22)  10 MAR 2022 17:54
 entering extended mode
 **./ML_HW#.tex
 (ML_HW#.tex
@@ -1126,30 +1126,39 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 128
 (C:\Users\amira\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+Underfull \hbox (badness 10000) in paragraph at lines 148--150
+[][]
+ []
+
+
 (C:\Users\amira\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\se-ascii-pr
 int.def
 File: se-ascii-print.def 2019/11/29 v1.12 stringenc: Printable ASCII characters
 
 ) [1
 
-] [2] [3] [4] [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1093.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1093.
- (ML_HW#.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1093.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1093.
+]
+Overfull \hbox (1.64362pt too wide) detected at line 215
+[] [] [][] \OT1/cmr/m/n/10 = [][] [] []
+ []
 
+[2] [3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 359.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 359.
+ (ML_HW#.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 359.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 359.
 Package rerunfilecheck Info: File `ML_HW#.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1093.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 359.
  ) 
 Here is how much of TeX's memory you used:
- 25209 strings out of 414071
- 494914 string characters out of 2894590
- 845692 words of memory out of 3000000
- 42394 multiletter control sequences out of 15000+200000
- 537859 words of font info for 78 fonts, out of 3000000 for 9000
+ 25153 strings out of 414071
+ 493831 string characters out of 2894590
+ 843693 words of memory out of 3000000
+ 42351 multiletter control sequences out of 15000+200000
+ 534711 words of font info for 60 fonts, out of 3000000 for 9000
  1348 hyphenation exceptions out of 8191
- 60i,11n,75p,4842b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,6n,75p,4842b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on ML_HW#.pdf (5 pages).
+Output written on ML_HW#.pdf (3 pages).
