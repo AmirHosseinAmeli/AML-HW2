@@ -140,7 +140,9 @@ BoldItalicFont = XB-NiloofarBdIt.ttf
 	$X \in {^{n \times d}}$
 	و
 	$Y \in {^{n \times l}}$
-	را در نظر بگیرید که n تعداد داده‌ها و d اندازه بردار باز‌نمایی هر داده و l تعداد برچسب‌های موجود در دسته می‌باشد. ثایت کنید که دو رابطه زیر با هم برابر می‌باشند:
+	را در نظر بگیرید که n تعداد داده‌ها و d اندازه بردار باز‌نمایی هر داده و l تعداد برچسب‌های موجود در دسته می‌باشد. ثایت کنید که دو رابطه زیر در صورتی که
+	$\lambda  > 0$
+	باشد، با هم برابر می‌باشند:
 	$$
 	{\left( {{X^T}X + \lambda I} \right)^{ - 1}}{X^T}Y = {X^T}{\left( {X{X^T} + \lambda I} \right)^{ - 1}}Y
 	$$
@@ -220,6 +222,8 @@ BoldItalicFont = XB-NiloofarBdIt.ttf
 	
 	که مطلوب سوال می‌باشد.
 	
+	این نکته لازم به ذکر می‌باشد که ماتریس‌هایی که معکوس آن را در اثبات بالا استفاده کردیم هردو ماتریس‌های مثبت نیمه‌معین می‌باشند و بنابراین حتما معکوس‌پذیر می‌باشند.
+	
 	در ادبیات متایادگیری استفاده از رابطه
 	${X^T}{\left( {X{X^T} + \lambda {I_n}} \right)^{ - 1}}$
 	بهینه‌تر می‌باشد. چون در این رابطه نیاز به محاسبه معکوس یک ماتریس با ابعاد
@@ -249,7 +253,50 @@ BoldItalicFont = XB-NiloofarBdIt.ttf
 	$$
 	
 	\item
-	انشا... اضافه خواهد شد.
+	
+	هدف سوال بیشینه‌کردن بیشینه درست‌نمایی می‌باشد.
+	$$
+	P\left( {Y|\omega ,X} \right) = \prod\limits_{i = 1}^N {{{\left( {\sigma \left( {{\omega ^T}{x_i}} \right)} \right)}^{{y_i}}}{{\left( {1 - \sigma \left( {{\omega ^T}{x_i}} \right)} \right)}^{1 - {y_i}}}}
+	$$
+	$$
+	L =  - \prod\limits_{i = 1}^N {{{\left( {\sigma \left( {{\omega ^T}{x_i}} \right)} \right)}^{{y_i}}}{{\left( {1 - \sigma \left( {{\omega ^T}{x_i}} \right)} \right)}^{1 - {y_i}}}}  =  - \sum\limits_{i = 1}^N {\left[ {{y_i}\log \left( {\sigma \left( {{\omega ^T}{x_i}} \right)} \right) + \left( {1 - {y_i}} \right)\log \left( {1 - \sigma \left( {{\omega ^T}{x_i}} \right)} \right)} \right]}
+	$$
+	
+	حال با گرادیان گیری مقادیر گرادیان اول و دوم را حساب می‌کنیم:
+	
+	$$
+	\nabla L = \sum\limits_{i = 1}^N {\left( {\sigma \left( {{\omega ^T}{x_i}} \right) - {y_i}} \right){x_i}^T}
+	$$
+	$$
+	\nabla \nabla L = \sum\limits_{i = 1}^N {\sigma \left( {{\omega ^T}{x_i}} \right)\left( {1 - \sigma \left( {{\omega ^T}{x_i}} \right)} \right){x_i}^T{x_i}}
+	$$
+	
+	ابتدا چند ماتریس تعریف می‌کنیم:
+	$$
+	\begin{array}{l}
+		{A_t} = diag({q_t})\\
+		q_t^{\left( i \right)} = \sigma \left( {\omega _t^T{x^{\left( i \right)}}} \right)\left( {1 - \sigma \left( {\omega _t^T{x^{\left( i \right)}}} \right)} \right)\\
+		B_t^{\left( i \right)} = \sigma \left( {\omega _t^T{x^{\left( i \right)}}} \right) - {y^{\left( i \right)}}
+	\end{array}
+	$$
+	
+	که
+	$A \in {^{n \times n}}$
+	یک ماتریس قطری
+	و
+	$B \in {^n}$
+	می‌باشد. 
+	حال اگر سیگماهای بالا را به ضرب ماتریسی تبدیل کنیم،‌ طبق رابطه به‌روزرسانی داریم:
+	
+	$$
+	\begin{aligned}
+		{\omega _{t + 1}} & = {\omega _t} - {H^{ - 1}}\nabla L\\
+		& = {\omega _t} - {\left( {{X^T}{A_t}X + \lambda I} \right)^{ - 1}}\left( {{X^T}{B_t} + \lambda {\omega _t}} \right)\\
+		&‌= {\left( {{X^T}{A_t}X + \lambda I} \right)^{ - 1}}\left( {\left( {{X^T}{A_t}X + \lambda I} \right){\omega _t} - {X^T}{B_t} - \lambda {\omega _t}} \right)\\
+		&‌= {\left( {{X^T}{A_t}X + \lambda I} \right)^{ - 1}}\left( {{X^T}{A_t}X{\omega _t} - {X^T}{B_t}} \right)
+	\end{aligned}
+	$$
+	
 	
 \end{enumerate}
 
