@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017/W32TeX) (preloaded format=xelatex 2020.9.24)  15 MAR 2022 09:35
+This is XeTeX, Version 3.14159265-2.6-0.99998 (TeX Live 2017/W32TeX) (preloaded format=xelatex 2020.9.24)  15 MAR 2022 10:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1357,18 +1357,18 @@ File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
 
 ]
 [2] [3] [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 747.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 747.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 749.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 749.
  (./ML_HW#.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 747.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 747.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 747.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 749.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 749.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 749.
  ) 
 Here is how much of TeX's memory you used:
- 30356 strings out of 493005
- 592121 string characters out of 6137956
+ 30358 strings out of 493005
+ 592149 string characters out of 6137956
  700933 words of memory out of 5000000
- 33876 multiletter control sequences out of 15000+600000
+ 33878 multiletter control sequences out of 15000+600000
  9105 words of font info for 61 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  55i,12n,68p,10426b,473s stack positions out of 5000i,500n,10000p,200000b,80000s
